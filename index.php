@@ -17,142 +17,134 @@ $totalBookings = $pdo->query("SELECT COUNT(*) FROM bookings")->fetchColumn();
 
 <!-- Modern Hero Section -->
 <section class="relative min-h-screen flex items-center overflow-hidden">
-    <!-- Dynamic Background -->
+    <!-- Background -->
     <div class="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-        <!-- Animated Mesh Gradient -->
-        <div class="absolute inset-0 opacity-30">
-            <div class="absolute top-0 left-1/4 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-[128px] animate-blob"></div>
-            <div class="absolute top-0 right-1/4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-[128px] animate-blob animation-delay-2000"></div>
-            <div class="absolute bottom-0 left-1/2 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-[128px] animate-blob animation-delay-4000"></div>
-        </div>
-        
-        <!-- Dot Pattern Overlay -->
-        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px); background-size: 20px 20px;"></div>
+        <!-- Subtle Background Pattern -->
+        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px); background-size: 30px 30px;"></div>
     </div>
 
     <!-- Main Content -->
     <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div class="text-center">
-            <!-- Announcement Badge -->
-            <div class="inline-flex items-center gap-2 px-4 py-2 mb-8 glass rounded-full border border-white/10 hover:border-blue-500/50 transition-all cursor-pointer group">
-                <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                </span>
-                <span class="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">
-                    #1 Premium Bike Rental in India
-                </span>
-                <svg class="w-4 h-4 text-gray-400 group-hover:text-white group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                </svg>
-            </div>
-
-            <!-- Hero Headline -->
-            <h1 class="text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tight mb-8">
-                <span class="block text-white mb-2">Ride The</span>
-                <span class="block">
-                    <span class="inline-block animated-gradient text-transparent bg-clip-text">
-                        Future
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <!-- Left: Content -->
+            <div class="text-center lg:text-left">
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 px-4 py-2 mb-8 glass rounded-full border border-white/10 hover:border-blue-500/50 transition-all cursor-pointer group">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                     </span>
-                </span>
-                <span class="block text-white mt-2">Today</span>
-            </h1>
+                    <span class="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">
+                        #1 Premium Bike Rental in India
+                    </span>
+                </div>
 
-            <!-- Subheadline -->
-            <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-12 leading-relaxed">
-                Experience the thrill of premium bikes. <span class="text-white font-semibold">₹250/day</span> onwards.
-                <span class="block mt-2">No hidden charges. Instant booking. 24/7 support.</span>
-            </p>
-
-            <!-- CTA Buttons -->
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-                <?php if (isLoggedIn()): ?>
-                    <a href="<?php echo BASE_URL; ?>/pages/explore.php" 
-                       class="group relative px-10 py-5 bg-white text-slate-900 font-bold text-lg rounded-2xl overflow-hidden shadow-2xl hover:shadow-white/20 transition-all duration-300 hover:scale-105 inline-flex items-center">
-                        <span class="relative z-10 flex items-center gap-3">
-                            <i class="fas fa-rocket"></i>
-                            <span>Start Your Ride</span>
-                            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                            </svg>
+                <!-- Headline -->
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6">
+                    <span class="block text-white mb-2">Ride The</span>
+                    <span class="block">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+                            Future
                         </span>
-                    </a>
-                    <?php if (isAdmin()): ?>
-                        <a href="<?php echo BASE_URL; ?>/pages/admin_dashboard.php" 
-                           class="group px-10 py-5 glass border border-white/20 text-white font-semibold text-lg rounded-2xl hover:bg-white/10 hover:border-white/40 transition-all duration-300 inline-flex items-center gap-3">
-                            <i class="fas fa-crown text-yellow-400"></i>
-                            <span>Admin Panel</span>
+                    </span>
+                    <span class="block text-white mt-2">Today</span>
+                </h1>
+
+                <!-- Subheadline -->
+                <p class="text-xl text-gray-400 max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
+                    Experience premium bike rentals with ₹250/day starting rates.
+                    <span class="block mt-2">No hidden charges. Instant booking. 24/7 support.</span>
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-12">
+                    <?php if (isLoggedIn()): ?>
+                        <a href="<?php echo BASE_URL; ?>/pages/explore.php"
+                           class="group relative px-8 py-4 bg-white text-slate-900 font-bold text-lg rounded-xl overflow-hidden shadow-2xl hover:shadow-white/20 transition-all duration-300 hover:scale-105 inline-flex items-center">
+                            <span class="relative z-10 flex items-center gap-3">
+                                <i class="fas fa-rocket"></i>
+                                <span>Start Your Ride</span>
+                                <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                                </svg>
+                            </span>
                         </a>
+                        <?php if (isAdmin()): ?>
+                            <a href="<?php echo BASE_URL; ?>/pages/admin_dashboard.php"
+                               class="group px-8 py-4 glass border border-white/20 text-white font-semibold text-lg rounded-xl hover:bg-white/10 hover:border-white/40 transition-all duration-300 inline-flex items-center gap-3">
+                                <i class="fas fa-crown text-yellow-400"></i>
+                                <span>Admin Panel</span>
+                            </a>
+                        <?php else: ?>
+                            <a href="<?php echo BASE_URL; ?>/pages/my_bookings.php"
+                               class="group px-8 py-4 glass border border-white/20 text-white font-semibold text-lg rounded-xl hover:bg-white/10 hover:border-white/40 transition-all duration-300 inline-flex items-center gap-3">
+                                <i class="fas fa-calendar-check"></i>
+                                <span>My Bookings</span>
+                            </a>
+                        <?php endif; ?>
                     <?php else: ?>
-                        <a href="<?php echo BASE_URL; ?>/pages/my_bookings.php" 
-                           class="group px-10 py-5 glass border border-white/20 text-white font-semibold text-lg rounded-2xl hover:bg-white/10 hover:border-white/40 transition-all duration-300 inline-flex items-center gap-3">
-                            <i class="fas fa-calendar-check"></i>
-                            <span>My Bookings</span>
+                        <a href="<?php echo BASE_URL; ?>/pages/explore.php"
+                           class="group relative px-8 py-4 bg-white text-slate-900 font-bold text-lg rounded-xl overflow-hidden shadow-2xl hover:shadow-white/20 transition-all duration-300 hover:scale-105 inline-flex items-center">
+                            <span class="relative z-10 flex items-center gap-3">
+                                <i class="fas fa-rocket"></i>
+                                <span>Explore Bikes</span>
+                                <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                                </svg>
+                            </span>
+                        </a>
+                        <a href="<?php echo BASE_URL; ?>/pages/register.php"
+                           class="group px-8 py-4 glass border border-white/20 text-white font-semibold text-lg rounded-xl hover:bg-white/10 hover:border-white/40 transition-all duration-300 inline-flex items-center gap-3">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Sign Up Free</span>
                         </a>
                     <?php endif; ?>
-                <?php else: ?>
-                    <a href="<?php echo BASE_URL; ?>/pages/explore.php" 
-                       class="group relative px-10 py-5 bg-white text-slate-900 font-bold text-lg rounded-2xl overflow-hidden shadow-2xl hover:shadow-white/20 transition-all duration-300 hover:scale-105 inline-flex items-center">
-                        <span class="relative z-10 flex items-center gap-3">
-                            <i class="fas fa-rocket"></i>
-                            <span>Explore Bikes</span>
-                            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                            </svg>
-                        </span>
-                    </a>
-                    <a href="<?php echo BASE_URL; ?>/pages/register.php" 
-                       class="group px-10 py-5 glass border border-white/20 text-white font-semibold text-lg rounded-2xl hover:bg-white/10 hover:border-white/40 transition-all duration-300 inline-flex items-center gap-3">
-                        <i class="fas fa-user-plus"></i>
-                        <span>Sign Up Free</span>
-                    </a>
-                <?php endif; ?>
-            </div>
+                </div>
 
-            <!-- Trust Indicators -->
-            <div class="flex flex-wrap items-center justify-center gap-8 text-sm text-gray-400">
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-shield-alt text-green-400"></i>
-                    <span>100% Secure</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-check-circle text-blue-400"></i>
-                    <span>Verified Bikes</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-headset text-purple-400"></i>
-                    <span>24/7 Support</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-award text-yellow-400"></i>
-                    <span>Best Prices</span>
+                <!-- Trust Indicators -->
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-6 text-sm text-gray-400">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-shield-alt text-green-400"></i>
+                        <span>100% Secure</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-blue-400"></i>
+                        <span>Verified Bikes</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-headset text-purple-400"></i>
+                        <span>24/7 Support</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-3 gap-6 max-w-4xl mx-auto mt-20">
-                <div class="glass rounded-3xl p-6 border border-white/10 hover:border-blue-500/50 transition-all duration-300 group">
-                    <div class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mb-2">
-                        <?php echo $totalBikes; ?>+
+            <!-- Right: Stats Grid -->
+            <div class="grid grid-cols-2 gap-4 lg:gap-6">
+                <!-- Stat 1 -->
+                <div class="glass rounded-2xl border border-white/10 p-6 hover:border-blue-500/50 transition-all duration-300 group text-center">
+                    <div class="p-3 bg-blue-500/20 rounded-xl inline-flex items-center justify-center mb-3 group-hover:bg-blue-500/30 transition-colors">
+                        <i class="fas fa-motorcycle text-blue-400 text-xl"></i>
                     </div>
-                    <div class="text-gray-400 font-medium">Premium Bikes</div>
-                    <div class="h-1 w-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full mx-auto mt-3 group-hover:w-full transition-all duration-300"></div>
+                    <p class="text-2xl lg:text-3xl font-black text-white mb-1"><?php echo $totalBikes; ?>+</p>
+                    <p class="text-gray-400 text-xs lg:text-sm font-medium">Premium Bikes</p>
                 </div>
 
-                <div class="glass rounded-3xl p-6 border border-white/10 hover:border-purple-500/50 transition-all duration-300 group">
-                    <div class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-2">
-                        <?php echo $totalUsers; ?>+
+                <!-- Stat 2 -->
+                <div class="glass rounded-2xl border border-white/10 p-6 hover:border-purple-500/50 transition-all duration-300 group text-center">
+                    <div class="p-3 bg-purple-500/20 rounded-xl inline-flex items-center justify-center mb-3 group-hover:bg-purple-500/30 transition-colors">
+                        <i class="fas fa-users text-purple-400 text-xl"></i>
                     </div>
-                    <div class="text-gray-400 font-medium">Happy Riders</div>
-                    <div class="h-1 w-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto mt-3 group-hover:w-full transition-all duration-300"></div>
+                    <p class="text-2xl lg:text-3xl font-black text-white mb-1"><?php echo $totalUsers; ?>+</p>
+                    <p class="text-gray-400 text-xs lg:text-sm font-medium">Happy Riders</p>
                 </div>
 
-                <div class="glass rounded-3xl p-6 border border-white/10 hover:border-green-500/50 transition-all duration-300 group">
-                    <div class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400 mb-2">
-                        <?php echo $totalBookings; ?>+
+                <!-- Stat 3 -->
+                <div class="glass rounded-2xl border border-white/10 p-6 hover:border-green-500/50 transition-all duration-300 group text-center lg:col-span-2">
+                    <div class="p-3 bg-green-500/20 rounded-xl inline-flex items-center justify-center mb-3 group-hover:bg-green-500/30 transition-colors">
+                        <i class="fas fa-calendar-check text-green-400 text-xl"></i>
                     </div>
-                    <div class="text-gray-400 font-medium">Total Bookings</div>
-                    <div class="h-1 w-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto mt-3 group-hover:w-full transition-all duration-300"></div>
+                    <p class="text-2xl lg:text-3xl font-black text-white mb-1"><?php echo $totalBookings; ?>+</p>
+                    <p class="text-gray-400 text-xs lg:text-sm font-medium">Total Bookings</p>
                 </div>
             </div>
         </div>
@@ -167,34 +159,6 @@ $totalBookings = $pdo->query("SELECT COUNT(*) FROM bookings")->fetchColumn();
             </svg>
         </div>
     </div>
-</section>
-
-<style>
-    @keyframes blob {
-        0%, 100% { transform: translate(0, 0) scale(1); }
-        33% { transform: translate(30px, -50px) scale(1.1); }
-        66% { transform: translate(-20px, 20px) scale(0.9); }
-    }
-    .animate-blob {
-        animation: blob 7s infinite;
-    }
-    .animation-delay-2000 {
-        animation-delay: 2s;
-    }
-    .animation-delay-4000 {
-        animation-delay: 4s;
-    }
-</style>
-
-<style>
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
-        }
-    </style>
 </section>
 
 <!-- Features Section -->
