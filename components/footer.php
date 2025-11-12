@@ -22,7 +22,7 @@
                             </div>
                             <div>
                                 <span class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">
-                                    BikeRental
+                                    Urban Spokes
                                 </span>
                                 <p class="text-xs text-gray-400 -mt-1">Ride Premium</p>
                             </div>
@@ -159,7 +159,7 @@
                                 </div>
                                 <div>
                                     <p class="text-xs text-gray-500 mb-1">Email Us</p>
-                                    <p class="text-white font-medium">support@bikerental.com</p>
+                                    <p class="text-white font-medium">support@urbanspokes.com</p>
                                 </div>
                             </li>
                             <li class="flex items-start space-x-3 text-gray-400 group">
@@ -179,7 +179,7 @@
                 <div class="border-t border-white/10 pt-8">
                     <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                         <div class="text-gray-400 text-sm text-center md:text-left">
-                            <p>&copy; <?php echo date('Y'); ?> BikeRental. All rights reserved.
+                            <p>&copy; <?php echo date('Y'); ?> Urban Spokes. All rights reserved.
                             </p>
                         </div>
                         <div class="flex flex-wrap justify-center gap-6 text-sm">

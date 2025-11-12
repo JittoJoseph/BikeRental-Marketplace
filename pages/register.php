@@ -11,6 +11,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
+    // File upload handling
+    $id_proof_path = '';
+    if (isset($_FILES['id_proof']) && $_FILES['id_proof']['error'] === UPLOAD_ERR_OK) {
+        $file = $_FILES['id_proof'];
+        $allowed_types = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'];
+        $max_size = 5 * 1024 * 1024; // 5MB
+        
+        $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        
+        if (!in_array($file_ext, $allowed_types)) {
+            $error = 'Invalid file type. Only PDF, DOC, DOCX, JPG, PNG files are allowed.';
+        } elseif ($file['size'] > $max_size) {
+            $error = 'File size too large. Maximum size is 5MB.';
+        } else {
+            // Generate unique filename
+            $new_filename = uniqid('id_proof_') . '.' . $file_ext;
+            $upload_path = __DIR__ . '/../uploads/' . $new_filename;
+            
+            if (move_uploaded_file($file['tmp_name'], $upload_path)) {
+                $id_proof_path = 'uploads/' . $new_filename;
+            } else {
+                $error = 'Failed to upload file. Please try again.';
+            }
+        }
+    } else {
+        $error = 'ID proof is required.';
+    }
+
     if (empty($name) || empty($email) || empty($password)) {
         $error = 'All fields are required';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -19,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Password must be at least 6 characters';
     } elseif ($password !== $confirm_password) {
         $error = 'Passwords do not match';
-    } else {
+    } elseif (empty($error)) { // Only proceed if no file upload errors
         // Check if email already exists
         $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
         $stmt->execute([$email]);
@@ -29,9 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Insert new user
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare("INSERT INTO users (name, email, password, is_admin) VALUES (?, ?, ?, 0)");
+            $stmt = $pdo->prepare("INSERT INTO users (name, email, password, is_admin, id_proof) VALUES (?, ?, ?, 0, ?)");
             
-            if ($stmt->execute([$name, $email, $hashedPassword])) {
+            if ($stmt->execute([$name, $email, $hashedPassword, $id_proof_path])) {
                 $success = 'Registration successful! You can now login.';
                 header('refresh:2;url=' . BASE_URL . '/pages/login.php');
             } else {
@@ -67,7 +95,7 @@ require_once __DIR__ . '/../components/header.php';
             </div>
         <?php endif; ?>
 
-        <form class="mt-8 space-y-6" method="POST">
+        <form class="mt-8 space-y-6" method="POST" enctype="multipart/form-data">
             <div class="space-y-4">
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
@@ -97,6 +125,13 @@ require_once __DIR__ . '/../components/header.php';
                     <input id="confirm_password" name="confirm_password" type="password" required 
                            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-lg placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                            placeholder="••••••••">
+                </div>
+
+                <div>
+                    <label for="id_proof" class="block text-sm font-medium text-gray-700">ID Proof</label>
+                    <input id="id_proof" name="id_proof" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required 
+                           class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-lg placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    <p class="mt-1 text-sm text-gray-500">Upload your ID proof (PDF, DOC, DOCX, JPG, PNG). Max size: 5MB</p>
                 </div>
             </div>
 

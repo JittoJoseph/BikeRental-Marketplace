@@ -199,11 +199,13 @@ require_once __DIR__ . '/../components/header.php';
                     </div>
                     <div>
                         <h3 class="font-semibold text-white">User Management</h3>
-                        <p class="text-sm text-gray-400">Monitor user activity</p>
+                        <p class="text-sm text-gray-400">Manage user accounts</p>
                     </div>
                 </div>
                 <div class="flex space-x-2">
-                    <span class="text-emerald-400 text-sm font-medium"><?php echo $stats['total_users']; ?> registered users</span>
+                    <a href="<?php echo BASE_URL; ?>/pages/user_management.php" class="text-emerald-400 hover:text-emerald-300 text-sm font-medium">Manage Users</a>
+                    <span class="text-gray-600">•</span>
+                    <span class="text-gray-400 text-sm"><?php echo $stats['total_users']; ?> registered</span>
                 </div>
             </div>
 
@@ -218,13 +220,15 @@ require_once __DIR__ . '/../components/header.php';
                     </div>
                 </div>
                 <div class="flex space-x-2">
-                    <span class="text-amber-400 text-sm font-medium"><?php echo $stats['pending_bookings']; ?> pending bookings</span>
+                    <a href="<?php echo BASE_URL; ?>/pages/manage_requests.php" class="text-amber-400 hover:text-amber-300 text-sm font-medium">Manage Requests</a>
+                    <span class="text-gray-600">•</span>
+                    <span class="text-gray-400 text-sm"><?php echo $stats['pending_bookings']; ?> pending</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Enhanced Bikes Table -->
+    <!-- Fleet Management -->
     <div class="glass rounded-2xl border border-white/10 overflow-hidden">
         <div class="p-8 border-b border-white/10">
             <div class="flex items-center justify-between">
@@ -236,6 +240,10 @@ require_once __DIR__ . '/../components/header.php';
                     <div class="text-sm text-gray-400">
                         <i class="fas fa-circle text-green-400 mr-1"></i><?php echo count($bikes); ?> bikes total
                     </div>
+                    <a href="<?php echo BASE_URL; ?>/pages/add_bike.php"
+                       class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg shadow-blue-500/20">
+                        <i class="fas fa-plus mr-2"></i>Add Bike
+                    </a>
                 </div>
             </div>
         </div>

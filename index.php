@@ -3,6 +3,16 @@ $pageTitle = 'Home';
 require_once __DIR__ . '/components/header.php';
 require_once __DIR__ . '/db_connect.php';
 
+// Show success message for ID proof upload
+if (isset($_GET['success']) && $_GET['success'] === 'id_proof_uploaded') {
+    echo '<div class="fixed top-24 right-4 bg-green-500/10 border border-green-500/20 text-green-400 p-4 rounded-lg shadow-lg z-50 max-w-sm animate-fade-in">
+        <i class="fas fa-check-circle mr-2"></i>ID proof uploaded successfully! You can now continue using our services.
+        <button onclick="this.parentElement.remove()" class="ml-2 text-green-400 hover:text-green-300">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>';
+}
+
 // Fetch featured bikes
 $stmt = $pdo->query("SELECT b.*, c.name as category_name FROM bikes b 
                      JOIN categories c ON b.category_id = c.id 

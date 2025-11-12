@@ -1,12 +1,58 @@
 <?php
 require_once __DIR__ . '/../config.php';
+
+// Check if user needs to upload ID proof
+$idProofRequired = false;
+if (isLoggedIn() && !isAdmin()) {
+    require_once __DIR__ . '/../db_connect.php';
+    $stmt = $pdo->prepare("SELECT id_proof FROM users WHERE id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $user = $stmt->fetch();
+    $idProofRequired = empty($user['id_proof']);
+}
+
+// Handle ID proof upload
+$upload_error = null;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_id_proof'])) {
+    require_once __DIR__ . '/../db_connect.php';
+    
+    if (isset($_FILES['id_proof']) && $_FILES['id_proof']['error'] === UPLOAD_ERR_OK) {
+        $allowed_types = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/png'];
+        $max_size = 5 * 1024 * 1024; // 5MB
+        
+        if (in_array($_FILES['id_proof']['type'], $allowed_types) && $_FILES['id_proof']['size'] <= $max_size) {
+            $upload_dir = __DIR__ . '/../uploads/';
+            $file_extension = pathinfo($_FILES['id_proof']['name'], PATHINFO_EXTENSION);
+            $unique_filename = uniqid() . '_' . time() . '.' . $file_extension;
+            $upload_path = $upload_dir . $unique_filename;
+            $relative_path = 'uploads/' . $unique_filename;
+            
+            if (move_uploaded_file($_FILES['id_proof']['tmp_name'], $upload_path)) {
+                // Update database
+                $stmt = $pdo->prepare("UPDATE users SET id_proof = ? WHERE id = ?");
+                if ($stmt->execute([$relative_path, $_SESSION['user_id']])) {
+                    header('Location: ' . BASE_URL . '/index.php?success=id_proof_uploaded');
+                    exit;
+                } else {
+                    $upload_error = 'Failed to update database.';
+                }
+            } else {
+                $upload_error = 'Failed to upload file.';
+            }
+        } else {
+            $upload_error = 'Invalid file type or size. Please upload PDF, DOC, DOCX, JPG, or PNG files up to 5MB.';
+        }
+    } else {
+        $upload_error = 'Please select a file to upload.';
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo isset($pageTitle) ? $pageTitle . ' - ' : ''; ?>Bike Rental System</title>
+    <title><?php echo isset($pageTitle) ? $pageTitle . ' - ' : ''; ?>Urban Spokes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -75,7 +121,7 @@ require_once __DIR__ . '/../config.php';
                         </div>
                         <div>
                             <span class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">
-                                BikeRental
+                                Urban Spokes
                             </span>
                             <p class="text-xs text-gray-400 -mt-1">Ride Premium</p>
                         </div>
@@ -98,6 +144,10 @@ require_once __DIR__ . '/../config.php';
                             <a href="<?php echo BASE_URL; ?>/pages/admin_dashboard.php" 
                                class="px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-300 font-medium">
                                 <i class="fas fa-cog mr-2"></i>Dashboard
+                            </a>
+                            <a href="<?php echo BASE_URL; ?>/pages/user_management.php" 
+                               class="px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-300 font-medium">
+                                <i class="fas fa-users mr-2"></i>Users
                             </a>
                             <a href="<?php echo BASE_URL; ?>/pages/manage_requests.php" 
                                class="px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-300 font-medium relative">
@@ -169,6 +219,10 @@ require_once __DIR__ . '/../config.php';
                            class="block px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/5 transition-all">
                             <i class="fas fa-cog mr-2"></i>Dashboard
                         </a>
+                        <a href="<?php echo BASE_URL; ?>/pages/user_management.php" 
+                           class="block px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/5 transition-all">
+                            <i class="fas fa-users mr-2"></i>User Management
+                        </a>
                         <a href="<?php echo BASE_URL; ?>/pages/manage_requests.php" 
                            class="block px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/5 transition-all">
                             <i class="fas fa-clipboard-list mr-2"></i>Requests
@@ -215,6 +269,37 @@ require_once __DIR__ . '/../config.php';
 
     <!-- Add spacing for fixed header -->
     <div class="h-20"></div>
+
+    <!-- ID Proof Upload Modal -->
+    <?php if ($idProofRequired): ?>
+    <div id="id-proof-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+        <div class="bg-slate-800 p-6 rounded-lg shadow-xl max-w-md w-full mx-4 glass glow">
+            <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+                <i class="fas fa-id-card mr-2 text-blue-400"></i>Upload ID Proof Required
+            </h2>
+            <p class="text-gray-300 mb-4">To continue using Urban Spokes services, please upload a valid ID proof document. This helps us verify your identity for security purposes.</p>
+            <?php if ($upload_error): ?>
+                <div class="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-lg mb-4">
+                    <i class="fas fa-exclamation-triangle mr-2"></i><?php echo htmlspecialchars($upload_error); ?>
+                </div>
+            <?php endif; ?>
+            <form method="POST" enctype="multipart/form-data">
+                <div class="mb-4">
+                    <label for="id_proof" class="block text-sm font-medium text-gray-300 mb-2">
+                        <i class="fas fa-file-upload mr-2"></i>Select ID Proof File
+                    </label>
+                    <input type="file" name="id_proof" id="id_proof" accept=".pdf,.doc,.docx,.jpg,.png" required
+                           class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    <p class="text-xs text-gray-400 mt-1">Accepted formats: PDF, DOC, DOCX, JPG, PNG (Max 5MB)</p>
+                </div>
+                <button type="submit" name="upload_id_proof" value="1"
+                        class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40">
+                    <i class="fas fa-upload mr-2"></i>Upload & Continue
+                </button>
+            </form>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <script>
         // Mobile menu toggle

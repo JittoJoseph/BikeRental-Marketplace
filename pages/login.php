@@ -90,10 +90,6 @@ require_once __DIR__ . '/../components/header.php';
                 </button>
             </div>
 
-            <div class="mt-4 p-4 bg-blue-50 rounded-lg">
-                <p class="text-sm text-gray-700 font-semibold mb-2">Demo Credentials:</p>
-                <p class="text-xs text-gray-600">Admin: admin@bikerental.com / admin123</p>
-            </div>
         </form>
     </div>
 </div>

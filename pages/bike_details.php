@@ -31,30 +31,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_booking'])) {
     if (!isLoggedIn()) {
         $bookingError = 'Please login to book a bike';
     } else {
-        $startDate = $_POST['start_date'];
-        $endDate = $_POST['end_date'];
-        $userId = $_SESSION['user_id'];
-
-        if (empty($startDate) || empty($endDate)) {
-            $bookingError = 'Please select start and end dates';
-        } elseif (strtotime($startDate) < strtotime('today')) {
-            $bookingError = 'Start date cannot be in the past';
-        } elseif (strtotime($endDate) < strtotime($startDate)) {
-            $bookingError = 'End date must be after start date';
+        // Check if user has uploaded ID proof
+        $stmt = $pdo->prepare("SELECT id_proof FROM users WHERE id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        $user = $stmt->fetch();
+        if (!$user || empty($user['id_proof'])) {
+            $bookingError = 'Please upload your ID proof to book bikes. You will be prompted to upload it when you navigate to other pages.';
         } else {
-            // Calculate total price
-            $days = ceil((strtotime($endDate) - strtotime($startDate)) / (60 * 60 * 24));
-            $totalPrice = $days * $bike['price'];
+            $startDate = $_POST['start_date'];
+            $endDate = $_POST['end_date'];
+            $userId = $_SESSION['user_id'];
 
-            $stmt = $pdo->prepare("INSERT INTO bookings (user_id, bike_id, start_date, end_date, total_price, status)
-                                   VALUES (?, ?, ?, ?, ?, 'pending')");
-            if ($stmt->execute([$userId, $bikeId, $startDate, $endDate, $totalPrice])) {
-                $bookingId = $pdo->lastInsertId();
-                // Redirect BEFORE any HTML output
-                header('Location: ' . BASE_URL . '/pages/payment.php?booking_id=' . $bookingId);
-                exit();
+            if (empty($startDate) || empty($endDate)) {
+                $bookingError = 'Please select start and end dates';
+            } elseif (strtotime($startDate) < strtotime('today')) {
+                $bookingError = 'Start date cannot be in the past';
+            } elseif (strtotime($endDate) < strtotime($startDate)) {
+                $bookingError = 'End date must be after start date';
             } else {
-                $bookingError = 'Failed to submit booking request. Please try again.';
+                // Calculate total price
+                $days = ceil((strtotime($endDate) - strtotime($startDate)) / (60 * 60 * 24));
+                $totalPrice = $days * $bike['price'];
+
+                $stmt = $pdo->prepare("INSERT INTO bookings (user_id, bike_id, start_date, end_date, total_price, status)
+                                       VALUES (?, ?, ?, ?, ?, 'pending')");
+                if ($stmt->execute([$userId, $bikeId, $startDate, $endDate, $totalPrice])) {
+                    $bookingId = $pdo->lastInsertId();
+                    // Redirect BEFORE any HTML output
+                    header('Location: ' . BASE_URL . '/pages/payment.php?booking_id=' . $bookingId);
+                    exit();
+                } else {
+                    $bookingError = 'Failed to submit booking request. Please try again.';
+                }
             }
         }
     }
