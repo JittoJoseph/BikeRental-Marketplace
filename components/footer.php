@@ -168,7 +168,7 @@
                                 </div>
                                 <div>
                                     <p class="text-xs text-gray-500 mb-1">Visit Us</p>
-                                    <p class="text-white font-medium">Mumbai, Maharashtra</p>
+                                    <p class="text-white font-medium">Kottayam, Kerala</p>
                                 </div>
                             </li>
                         </ul>
@@ -179,8 +179,7 @@
                 <div class="border-t border-white/10 pt-8">
                     <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                         <div class="text-gray-400 text-sm text-center md:text-left">
-                            <p>&copy; <?php echo date('Y'); ?> BikeRental. All rights reserved. Made with 
-                                <i class="fas fa-heart text-red-500 mx-1"></i> in India
+                            <p>&copy; <?php echo date('Y'); ?> BikeRental. All rights reserved.
                             </p>
                         </div>
                         <div class="flex flex-wrap justify-center gap-6 text-sm">
