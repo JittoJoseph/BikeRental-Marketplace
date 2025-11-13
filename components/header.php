@@ -22,22 +22,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_id_proof'])) {
         
         if (in_array($_FILES['id_proof']['type'], $allowed_types) && $_FILES['id_proof']['size'] <= $max_size) {
             $upload_dir = __DIR__ . '/../uploads/';
-            $file_extension = pathinfo($_FILES['id_proof']['name'], PATHINFO_EXTENSION);
-            $unique_filename = uniqid() . '_' . time() . '.' . $file_extension;
-            $upload_path = $upload_dir . $unique_filename;
-            $relative_path = 'uploads/' . $unique_filename;
             
-            if (move_uploaded_file($_FILES['id_proof']['tmp_name'], $upload_path)) {
-                // Update database
-                $stmt = $pdo->prepare("UPDATE users SET id_proof = ? WHERE id = ?");
-                if ($stmt->execute([$relative_path, $_SESSION['user_id']])) {
-                    header('Location: ' . BASE_URL . '/index.php?success=id_proof_uploaded');
-                    exit;
-                } else {
-                    $upload_error = 'Failed to update database.';
+            // Ensure uploads directory exists
+            if (!is_dir($upload_dir)) {
+                if (!mkdir($upload_dir, 0755, true)) {
+                    $upload_error = 'Failed to create uploads directory.';
                 }
-            } else {
-                $upload_error = 'Failed to upload file.';
+            }
+            
+            if (!$upload_error) {
+                $file_extension = pathinfo($_FILES['id_proof']['name'], PATHINFO_EXTENSION);
+                $unique_filename = uniqid() . '_' . time() . '.' . $file_extension;
+                $upload_path = $upload_dir . $unique_filename;
+                $relative_path = 'uploads/' . $unique_filename;
+                
+                if (move_uploaded_file($_FILES['id_proof']['tmp_name'], $upload_path)) {
+                    // Update database
+                    $stmt = $pdo->prepare("UPDATE users SET id_proof = ? WHERE id = ?");
+                    if ($stmt->execute([$relative_path, $_SESSION['user_id']])) {
+                        header('Location: ' . BASE_URL . '/index.php?success=id_proof_uploaded');
+                        exit;
+                    } else {
+                        $upload_error = 'Failed to update database.';
+                    }
+                } else {
+                    $upload_error = 'Failed to upload file.';
+                }
             }
         } else {
             $upload_error = 'Invalid file type or size. Please upload PDF, DOC, DOCX, JPG, or PNG files up to 5MB.';

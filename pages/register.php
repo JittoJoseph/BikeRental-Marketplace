@@ -27,12 +27,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Generate unique filename
             $new_filename = uniqid('id_proof_') . '.' . $file_ext;
-            $upload_path = __DIR__ . '/../uploads/' . $new_filename;
+            $upload_dir = __DIR__ . '/../uploads/';
             
-            if (move_uploaded_file($file['tmp_name'], $upload_path)) {
-                $id_proof_path = 'uploads/' . $new_filename;
-            } else {
-                $error = 'Failed to upload file. Please try again.';
+            // Ensure uploads directory exists
+            if (!is_dir($upload_dir)) {
+                if (!mkdir($upload_dir, 0755, true)) {
+                    $error = 'Failed to create uploads directory.';
+                }
+            }
+            
+            if (empty($error)) {
+                $upload_path = $upload_dir . $new_filename;
+                
+                if (move_uploaded_file($file['tmp_name'], $upload_path)) {
+                    $id_proof_path = 'uploads/' . $new_filename;
+                } else {
+                    $error = 'Failed to upload file. Please try again.';
+                }
             }
         }
     } else {
